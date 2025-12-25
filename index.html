@@ -45,7 +45,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>体重・食事目標 自動計算ツール</h1>
+  <h1>体重・食事目標 かんたん自動計算ツール</h1>
 
   <div class="field">
     <label>身長（m）</label>
@@ -59,7 +59,7 @@
 
   <div class="field">
     <label>長期的な目標BMI<br>
-      <span class="note">22：積極的に糖尿病予防を目指す場合の目標BMI　/　25：無理なく続けられる目標BMI</span>
+      <span class="note">22：積極的に糖尿病予防を目指す場合の目標BMI<br>25：無理なく継続しやすい目標BMI</span>
     </label>
     <select id="bmi">
       <option value="22" selected>22</option>
@@ -71,7 +71,7 @@
 
   <div class="field">
     <label>半年後の減量目標<br>
-      <span class="note">まず2kgの減量を目標に。出来たら3％〜10％の減量を目標に。</span>
+      <span class="note">まずは2kg減量を目標に。可能であれば3〜10％の減量を目指しましょう。</span>
     </label>
     <select id="reduction">
       <optgroup label="体重で設定"><option value="kg_2">−2kg</option></optgroup>
@@ -86,7 +86,8 @@
 
   <div class="field">
     <label>身体活動量</label>
-    <div class="note"><strong>30（おすすめ）</strong> 立つ／歩くことが多い生活：接客・販売・家事が多い</div>
+    <div class="note"><strong>30（おすすめ）</strong> 立つ・歩く動作が多い生活（接客・販売・家事など）</div>
+    <div class="note">25　座っていることが多い生活（デスクワーク・運転が中心）<br>35　体を使う仕事や運動習慣がある生活（工事・運送・週3回以上の運動）</div>
     <select id="intake">
       <option value="25">25</option>
       <option value="30" selected>30</option>
@@ -100,7 +101,7 @@
     <div class="result-row">
       <div class="result-content">
         <span class="result-text" id="r2">② 半年後の体重目標：— kg</span><br>
-        <span class="note">シンクヘルスアプリ「もっと見る ＞ 目標 ＞ 目標体重」に入力</span>
+        <span class="note">シンクヘルスアプリの「もっと見る＞ 目標 ＞ 目標体重」に入力してください</span>
       </div>
       <button class="copy" onclick="copyValue('r2')">ここを押す</button>
     </div>
@@ -108,7 +109,7 @@
     <div class="result-row">
       <div class="result-content">
         <span class="result-text" id="r3">③ 食事摂取量の目標：— kcal / 日</span><br>
-        <span class="note">シンクヘルスアプリ「もっと見る ＞ 目標 ＞ 食事 ＞ エネルギー」に入力</span>
+        <span class="note">シンクヘルスアプリの「もっと見る＞ 目標 ＞  食事 ＞ カロリー」に入力してください</span>
       </div>
       <button class="copy" onclick="copyValue('r3')">ここを押す</button>
     </div>
@@ -150,7 +151,6 @@
     const value = document.getElementById(id).dataset.value;
     if (!value) return;
 
-    // Clipboard API が使えない環境向けフォールバック
     const textarea = document.createElement('textarea');
     textarea.value = value;
     document.body.appendChild(textarea);
