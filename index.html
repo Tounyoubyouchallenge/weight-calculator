@@ -28,13 +28,13 @@
     }
     .note { margin-top: 6px; font-size: 0.75rem; color: #555; line-height: 1.4; }
     .result { background: #f0f4ff; padding: 16px; border-radius: 8px; margin-top: 24px; }
-    .result-row { display: flex; align-items: center; gap: 8px; margin: 12px 0; }
+    .result-row { display: flex; align-items: center; gap: 8px; margin: 12px 0; flex-wrap: nowrap; }
     .result-content { flex: 1; }
     .result-text { font-weight: 600; line-height: 1.4; }
     .result-value { font-weight: 700; white-space: nowrap; }
     button.copy {
-      background: #2563eb; color: #fff; padding: 8px 10px; border: none; border-radius: 8px;
-      cursor: pointer; font-size: 0.85rem; min-width: 72px; font-weight: 700;
+      background: #2563eb; color: #fff; padding: 6px 8px; border: none; border-radius: 6px;
+      cursor: pointer; font-size: 0.75rem; min-width: 60px; font-weight: 600; white-space: nowrap;
     }
     }
     .toast {
@@ -101,7 +101,7 @@
     <div class="result-row"><span class="result-text" id="r1">① 長期的な体重目標：— kg</span></div>
 
     <div class="result-row">
-      <div class="result-content">
+      <div class="result-content" style="min-width:0;">
         <span class="result-text">② 半年後の体重目標：</span><span class="result-value" id="r2">— kg</span><br>
         <span class="note">シンクヘルスアプリの「もっと見る＞ 目標 ＞ 目標体重」に入力してください</span>
       </div>
@@ -109,7 +109,7 @@
     </div>
 
     <div class="result-row">
-      <div class="result-content">
+      <div class="result-content" style="min-width:0;">
         <span class="result-text">③ 食事摂取量の目標：</span><span class="result-value" id="r3">— kcal / 日</span><br>
         <span class="note">シンクヘルスアプリの「もっと見る＞ 目標 ＞  食事 ＞ カロリー」に入力してください</span>
       </div>
