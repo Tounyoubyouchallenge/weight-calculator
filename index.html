@@ -52,8 +52,8 @@
   <h1>体重・食事目標 かんたん自動計算ツール</h1>
 
   <div class="field">
-    <label>身長（m）</label>
-    <input type="number" step="0.01" id="height" placeholder="例：1.70" />
+    <label>身長（cm）</label>
+    <input type="number" step="0.1" id="height" placeholder="例：170" />
   </div>
 
   <div class="field">
@@ -143,9 +143,10 @@
   inputs.forEach(el => el.addEventListener('input', calculate));
 
   function calculate() {
-    const h = parseFloat(height.value);
+    const hCm = parseFloat(height.value);
+    const h = hCm / 100;
     const w = parseFloat(currentWeight.value);
-    if (!h || !w) return;
+    if (!hCm || !w) return;
 
     // 減量率オプションに実際の体重を併記
     document.querySelectorAll('#reduction option').forEach(opt => {
