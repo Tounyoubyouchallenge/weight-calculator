@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>体重・食事目標 自動計算ツール</title>
+  <title>体重・食事目標 かんたん自動計算ツール</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -28,14 +28,16 @@
     }
     .note { margin-top: 6px; font-size: 0.75rem; color: #555; line-height: 1.4; }
     .result { background: #f0f4ff; padding: 16px; border-radius: 8px; margin-top: 24px; }
-    .result-row { display: flex; align-items: center; gap: 8px; margin: 12px 0; flex-wrap: nowrap; }
-    .result-content { flex: 1; }
-    .result-text { font-weight: 600; line-height: 1.4; }
+    .result-row {
+      display: flex; align-items: center; gap: 6px; margin: 12px 0; flex-wrap: nowrap;
+    }
+    .result-content { flex: 1; min-width: 0; }
+    .result-text { font-weight: 600; }
     .result-value { font-weight: 700; white-space: nowrap; }
     button.copy {
       background: #2563eb; color: #fff; padding: 6px 8px; border: none; border-radius: 6px;
-      cursor: pointer; font-size: 0.75rem; min-width: 60px; font-weight: 600; white-space: nowrap;
-    }
+      cursor: pointer; font-size: 0.7rem; min-width: 56px; font-weight: 600; white-space: nowrap;
+      flex-shrink: 0;
     }
     .toast {
       position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -60,9 +62,13 @@
   </div>
 
   <div class="field">
-    <label>長期的な目標BMI<br>
-      <span class="note">22：積極的に糖尿病予防を目指す場合の目標BMI<br>25：無理なく継続しやすい目標BMI</span>
-    </label>
+    <div class="note" id="stdWeight">あなたの標準体重（BMI22）：— kg</div>
+    <div class="note" id="obeseLine">肥満ラインを越えて、健康的な体重の目安（BMI25）：— kg</div>
+  </div>
+
+  <div class="field">
+    <label>長期的な目標BMI</label>
+    <div class="note">22：積極的に糖尿病予防を目指す場合の目標BMI ／ 25：無理なく継続しやすい目標BMI</div>
     <select id="bmi">
       <option value="22" selected>22</option>
       <option value="23">23</option>
@@ -72,48 +78,60 @@
   </div>
 
   <div class="field">
-    <label>半年後の減量目標<br>
-      <span class="note">まずは2kg減量を目標に。可能であれば3〜10％の減量を目指しましょう。</span>
-    </label>
+    <label>半年後の減量目標</label>
+    <div class="note">まずは2kg減量を目標に。可能であれば3〜10％の減量を目指しましょう。</div>
     <select id="reduction">
-      <optgroup label="体重で設定"><option value="kg_2">−2kg</option></optgroup>
+      <optgroup label="体重で設定">
+        <option value="kg_2">−2kg</option>
+      </optgroup>
       <optgroup label="減量率で設定">
-        <option value="rate_3">3%</option><option value="rate_4">4%</option>
-        <option value="rate_5">5%</option><option value="rate_6">6%</option>
-        <option value="rate_7">7%</option><option value="rate_8">8%</option>
-        <option value="rate_9">9%</option><option value="rate_10">10%</option>
+        <option value="rate_3">3%</option>
+        <option value="rate_4">4%</option>
+        <option value="rate_5">5%</option>
+        <option value="rate_6">6%</option>
+        <option value="rate_7">7%</option>
+        <option value="rate_8">8%</option>
+        <option value="rate_9">9%</option>
+        <option value="rate_10">10%</option>
       </optgroup>
     </select>
   </div>
 
   <div class="field">
     <label>身体活動量</label>
-    <div class="note"><strong>30（おすすめ）</strong> 立つ・歩く動作が多い生活（接客・販売・家事など）</div>
-    <div class="note">25　座っていることが多い生活（デスクワーク・運転が中心）<br>35　体を使う仕事や運動習慣がある生活（工事・運送・週3回以上の運動）</div>
+    <div class="note">
+      ・<strong>基本コース（×30kcal）</strong>：無理なく標準的に進めたい方（迷ったらこれ！）<br>
+      ・しっかり減量コース（×25kcal）：普段あまり動かない方、または少し早めに体重を落としたい方<br>
+      ・活動的コース（×35kcal）：立ち仕事や力仕事の方、または運動習慣がしっかりある方
+    </div>
     <select id="intake">
-      <option value="25">25</option>
-      <option value="30" selected>30</option>
-      <option value="35">35</option>
+      <option value="30" selected>基本コース（30）</option>
+      <option value="25">しっかり減量コース（25）</option>
+      <option value="35">活動的コース（35）</option>
     </select>
   </div>
 
   <div class="result">
-    <div class="result-row"><span class="result-text" id="r1">① 長期的な体重目標：— kg</span></div>
-
     <div class="result-row">
-      <div class="result-content" style="min-width:0;">
-        <span class="result-text">② 半年後の体重目標：</span><span class="result-value" id="r2">— kg</span><br>
-        <span class="note">シンクヘルスアプリの「もっと見る＞ 目標 ＞ 目標体重」に入力してください</span>
-      </div>
-      <button class="copy" onclick="copyValue('r2')">ここを押す</button>
+      <span class="result-text" id="r1">① 長期的な体重目標：— kg</span>
     </div>
 
     <div class="result-row">
-      <div class="result-content" style="min-width:0;">
-        <span class="result-text">③ 食事摂取量の目標：</span><span class="result-value" id="r3">— kcal / 日</span><br>
-        <span class="note">シンクヘルスアプリの「もっと見る＞ 目標 ＞  食事 ＞ カロリー」に入力してください</span>
+      <div class="result-content">
+        <span class="result-text">② 半年後の体重目標：</span>
+        <span class="result-value" id="r2">— kg</span><br>
+        <span class="note">シンクヘルスアプリの「もっと見る ＞ 目標 ＞ 目標体重」に入力してください</span>
       </div>
-      <button class="copy" onclick="copyValue('r3')">ここを押す</button>
+      <button class="copy" onclick="copyValue('r2')">値をコピー</button>
+    </div>
+
+    <div class="result-row">
+      <div class="result-content">
+        <span class="result-text">③ 食事摂取量の目標：</span>
+        <span class="result-value" id="r3">— kcal / 日</span><br>
+        <span class="note">シンクヘルスアプリの「もっと見る ＞ 目標 ＞ 食事 ＞ カロリー」に入力してください</span>
+      </div>
+      <button class="copy" onclick="copyValue('r3')">値をコピー</button>
     </div>
   </div>
 
@@ -129,6 +147,15 @@
     const w = parseFloat(currentWeight.value);
     if (!h || !w) return;
 
+    // 減量率オプションに実際の体重を併記
+    document.querySelectorAll('#reduction option').forEach(opt => {
+      if (opt.value.startsWith('rate')) {
+        const rate = parseFloat(opt.value.split('_')[1]);
+        const t = w * (100 - rate) / 100;
+        opt.textContent = `${rate}%（${t.toFixed(1)}kg）`;
+      }
+    });
+
     const bmiVal = parseFloat(bmi.value);
     const targetYear = h * h * bmiVal;
 
@@ -140,9 +167,17 @@
       target = w - 2;
     }
 
-    const kcal = target * parseFloat(intake.value);
+        // 食事摂取量の目標：BMI22の標準体重 × 身体活動量係数
+    const stdForKcal = h * h * 22;
+    const kcal = stdForKcal * parseFloat(intake.value);
 
     r1.textContent = `① 長期的な体重目標：${targetYear.toFixed(1)} kg`;
+
+    const std = h * h * 22;
+    const obese = h * h * 25;
+    stdWeight.textContent = `あなたの標準体重（BMI22）：${std.toFixed(1)} kg`;
+    obeseLine.textContent = `肥満ラインを越えて、健康的な体重の目安（BMI25）：${obese.toFixed(1)} kg`;
+
     r2.textContent = `${target.toFixed(1)} kg`;
     r2.dataset.value = target.toFixed(1);
     r3.textContent = `${Math.round(kcal)} kcal / 日`;
